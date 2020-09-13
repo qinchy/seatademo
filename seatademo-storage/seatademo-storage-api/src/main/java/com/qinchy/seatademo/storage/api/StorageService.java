@@ -10,4 +10,6 @@ public interface StorageService {
     StorageModel getByCommodityCode(String commodityCode);
 
     StorageModel addStorage(StorageModel user);
+
+    int deduct(StorageModel storageModel);
 }

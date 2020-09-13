@@ -40,4 +40,12 @@ public class StorageServiceImpl implements StorageService {
         storageModel.setId(id);
         return storageModel;
     }
+
+    @Override
+    public int deduct(StorageModel storageModel) {
+        StorageDO storageDO = new StorageDO();
+        storageDO.setCommodityCode(storageModel.getCommodityCode());
+        storageDO.setCount(storageModel.getCount());
+        return storageMapper.deduct(storageDO);
+    }
 }

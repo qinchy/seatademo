@@ -11,4 +11,6 @@ public interface OrderService {
     OrderModel getByUserId(String userId);
 
     OrderModel addOrder(OrderModel order);
+
+    void placeOrder(String userId, String commodityCode, Integer count);
 }

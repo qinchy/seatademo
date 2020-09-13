@@ -19,15 +19,16 @@ import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 /**
  * @author xiaojing
  */
 @RestController
+@RequestMapping("/account")
 public class AccountController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
@@ -45,6 +46,24 @@ public class AccountController {
 
 	@PostMapping(value = "/account", produces = "application/json")
 	public String account(String userId, int money) {
+		LOGGER.info("Account Service ... xid: " + RootContext.getXID());
+
+		if (random.nextBoolean()) {
+			throw new RuntimeException("this is a mock Exception");
+		}
+
+		int result = jdbcTemplate.update(
+				"update account_tbl set money = money - ? where user_id = ?",
+				new Object[] { money, userId });
+		LOGGER.info("Account Service End ... ");
+		if (result == 1) {
+			return SUCCESS;
+		}
+		return FAIL;
+	}
+
+	@GetMapping(value = "/reduce")
+	public String reduce(@RequestParam("userId") String userId, @RequestParam("money") BigDecimal money) {
 		LOGGER.info("Account Service ... xid: " + RootContext.getXID());
 
 		if (random.nextBoolean()) {

@@ -111,7 +111,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.0.RELEASE</version>
                 <configuration>
-                    <mainClass>SeatademoAccountApplication</mainClass>
+                    <mainClass>com.qinchy.seatademo.user.SeatademoUserApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

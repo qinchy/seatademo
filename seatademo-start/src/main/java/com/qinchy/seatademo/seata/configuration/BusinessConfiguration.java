@@ -37,7 +37,7 @@ public class BusinessConfiguration {
 		return new RestTemplate();
 	}
 
-	@FeignClient(value = "storage", url = "http://127.0.0.1:18082")
+	@FeignClient(value = "seatademo-storage", url = "http://127.0.0.1:18082")
 	public interface StorageService {
 
 		@RequestMapping(path = "/storage/{commodityCode}/{count}")
@@ -46,7 +46,7 @@ public class BusinessConfiguration {
 
 	}
 
-	@FeignClient(value = "order", url = "http://127.0.0.1:18083")
+	@FeignClient(value = "seatademo-order", url = "http://127.0.0.1:18083")
 	public interface OrderService {
 
 		@PostMapping(path = "/order")

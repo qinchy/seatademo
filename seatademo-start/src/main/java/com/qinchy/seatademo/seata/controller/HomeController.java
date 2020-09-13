@@ -58,7 +58,7 @@ public class HomeController {
 		this.storageService = storageService;
 	}
 
-	@GlobalTransactional(timeoutMills = 300000, name = "spring-cloud-demo-tx")
+	@GlobalTransactional(timeoutMills = 300000, name = "default-seata-service-group")
 	@GetMapping(value = "/seata/rest", produces = "application/json")
 	public String rest() {
 
@@ -94,7 +94,7 @@ public class HomeController {
 		return SUCCESS;
 	}
 
-	@GlobalTransactional(timeoutMills = 300000, name = "spring-cloud-demo-tx")
+	@GlobalTransactional(timeoutMills = 300000, name = "default-seata-service-group")
 	@GetMapping(value = "/seata/feign", produces = "application/json")
 	public String feign() {
 

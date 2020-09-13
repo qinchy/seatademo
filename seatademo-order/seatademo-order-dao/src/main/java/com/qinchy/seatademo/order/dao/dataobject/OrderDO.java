@@ -2,6 +2,8 @@ package com.qinchy.seatademo.order.dao.dataobject;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  */
@@ -15,5 +17,5 @@ public class OrderDO {
 
     private Integer count;
 
-    private Integer money;
+    private BigDecimal money;
 }

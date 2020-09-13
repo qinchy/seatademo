@@ -22,4 +22,8 @@
             SELECT LAST_INSERT_ID() AS ID
         </selectKey>
     </insert>
+
+    <update id="deduct" parameterType="com.qinchy.seatademo.storage.dao.dataobject.StorageDO">
+        UPDATE storage_tbl set count = count - #{count} where commodity_Code = #{commodityCode}
+    </update>
 </mapper>

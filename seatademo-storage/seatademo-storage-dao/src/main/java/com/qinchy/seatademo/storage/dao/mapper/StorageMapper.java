@@ -12,4 +12,6 @@ public interface StorageMapper {
     StorageDO getByCommodityCode(String commodityCode);
 
     Long addStorage(StorageDO user);
+
+    int deduct(StorageDO storageDO);
 }
