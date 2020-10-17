@@ -1,0 +1,37 @@
+server:
+  port: 18081
+spring:
+  application:
+    name: seatademo-user
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password:
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: HikariDataSource
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+logging:
+  level:
+    root: info
+    org.mybatis: debug
+    java.sql: debug
+    org.springframework.web: trace
+arthas:
+  agent-id: seatademo-user
+  http-port: 18091
+  home: D:/Dev_Tools/arthas-3.3.7
+  ip: localhost
+  telnet-port: 18071
+  slient-init: false
+  session-timeout: 10
+  stat-url:

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qinchy.seatademo.storage.dao.mapper.StorageMapper">
+
+    <resultMap id="BaseResultMap" type="com.qinchy.seatademo.storage.dao.dataobject.StorageDO">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="commodity_Code" jdbcType="VARCHAR" property="commodityCode" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    
+    <select id="getByCommodityCode" parameterType="string" resultMap="BaseResultMap">
+        SELECT *
+        FROM storage_tbl
+        WHERE commodity_code = #{value}
+    </select>
+
+    <insert id="addStorage" parameterType="com.qinchy.seatademo.storage.dao.dataobject.StorageDO">
+        INSERT INTO storage_tbl(commodity_code, `count`) VALUES (#{commodityCode}, #{count})
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+</mapper>
