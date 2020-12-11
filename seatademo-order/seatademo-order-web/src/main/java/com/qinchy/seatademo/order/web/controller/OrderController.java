@@ -19,6 +19,7 @@ package com.qinchy.seatademo.order.web.controller;
 import com.qinchy.seatademo.order.api.OrderService;
 import com.qinchy.seatademo.order.api.model.OrderModel;
 import io.seata.core.context.RootContext;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/order", produces = "application/json")
+    @GlobalTransactional
     public String order(String userId, String commodityCode, int orderCount) {
         LOGGER.info("Order Service Begin ... xid: " + RootContext.getXID());
 
