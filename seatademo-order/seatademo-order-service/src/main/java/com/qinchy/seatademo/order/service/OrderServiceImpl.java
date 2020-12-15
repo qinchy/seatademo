@@ -17,10 +17,16 @@ import java.math.BigDecimal;
 
 
 /**
- * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
+ * 订单服务
+ *
+ * @author qinchy
  */
 @Service("orderService")
 public class OrderServiceImpl implements OrderService {
+
+    private static final BeanCopier COPIER1 = BeanCopier.create(OrderModel.class, OrderDO.class, false);
+
+    private static final BeanCopier COPIER2 = BeanCopier.create(OrderDO.class, OrderModel.class, false);
 
     @Autowired
     private OrderMapper orderMapper;
@@ -31,13 +37,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private StorageFeignClient storageFeignClient;
 
-    private static final BeanCopier COPIER1 = BeanCopier.create(OrderModel.class, OrderDO.class, false);
-
-    private static final BeanCopier COPIER2 = BeanCopier.create(OrderDO.class, OrderModel.class, false);
-
     @Override
-    public OrderModel getByUserId(String userId) {
-        OrderDO orderDO = orderMapper.getByUserId(userId);
+    public OrderModel getOrderByUserId(String userId) {
+        OrderDO orderDO = orderMapper.getOrderByUserId(userId);
 
         OrderModel orderModel = new OrderModel();
         COPIER2.copy(orderDO, orderModel, null);
@@ -45,52 +47,46 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderModel addOrder(OrderModel orderModel) {
+    public OrderModel createOrder(OrderModel orderModel) {
         OrderDO orderDO = new OrderDO();
         COPIER1.copy(orderModel, orderDO, null);
 
-        Long id = orderMapper.addOrder(orderDO);
+        Integer id = orderMapper.createOrder(orderDO);
         orderModel.setId(id);
         return orderModel;
     }
 
     /**
-     * 下单：创建订单、减库存，涉及到两个服务
+     * 下单服务(扣账户+减库存)
      *
-     * @param userId
-     * @param commodityCode
-     * @param count
+     * @param userId        账户编号
+     * @param commodityCode 商品代码
+     * @param count         商品数量
      */
     @Override
     @GlobalTransactional
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(String userId, String commodityCode, Integer count) {
+    public OrderModel createOrder(String userId, String commodityCode, Integer count) {
         // 新增订单
         BigDecimal orderMoney = new BigDecimal(count).multiply(new BigDecimal(5));
-        OrderDO order = new OrderDO();
-        order.setUserId(userId);
-        order.setCommodityCode(commodityCode);
-        order.setCount(count);
-        order.setMoney(orderMoney);
-        orderMapper.addOrder(order);
 
         // 减库存
         storageFeignClient.deduct(commodityCode, count);
-    }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void create(String userId, String commodityCode, Integer count) {
-
-        BigDecimal orderMoney = new BigDecimal(count).multiply(new BigDecimal(5));
+        // 扣账户
+        accountFeignClient.reduce(userId, orderMoney);
 
         OrderDO order = new OrderDO();
         order.setUserId(userId);
         order.setCommodityCode(commodityCode);
         order.setCount(count);
         order.setMoney(orderMoney);
-        orderMapper.addOrder(order);
+        orderMapper.createOrder(order);
 
-        accountFeignClient.reduce(userId, orderMoney);
+        OrderModel orderModel = new OrderModel();
+        COPIER2.copy(order, orderModel, null);
 
+        return orderModel;
     }
+
 }

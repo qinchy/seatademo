@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 @FeignClient(name = "seatademo-account")
 public interface AccountFeignClient {
 
-    @GetMapping("/reduce")
+    @GetMapping("/account/reduce")
     Boolean reduce(@RequestParam("userId") String userId, @RequestParam("money") BigDecimal money);
 }

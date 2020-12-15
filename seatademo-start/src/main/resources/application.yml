@@ -8,6 +8,11 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: seatademo-start-service-group
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,18 +29,26 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
 
+arthas:
+  agent-id: seatademo-start
+  http-port: 18090
+  home: D:/Dev_Tools/arthas-3.3.7
+  ip: localhost
+  telnet-port: 18070
+  slient-init: false
+  session-timeout: 10
+  stat-url:
+
 seata:
   enabled: true
+  registry:
+    nacos:
+      cluster: default
+      server-addr: localhost
   service:
-    vgroupMapping:
-      default_tx_group: default
+    disable-global-transaction: false
     grouplist:
       default: 127.0.0.1:8091
-    disable-global-transaction: false
-  registry:
-    type: nacos
-  nacos:
-    cluster: default
-    server-addr: localhost
-  application-id: seatademo-start
-  tx-service-group: default-seata-service-group
+    vgroup-mapping:
+      seatademo-start-service-group: default
+  tx-service-group: seatademo-start-service-group

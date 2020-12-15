@@ -15,52 +15,62 @@
  */
 package com.qinchy.seatademo.user.web.controller;
 
+import com.qinchy.seatademo.user.api.UserService;
+import com.qinchy.seatademo.user.api.model.UserModel;
 import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 
 /**
- * @author xiaojing
+ * 用户controller
+ *
+ * @author qinchy
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-	private static final String SUCCESS = "SUCCESS";
-	private static final String FAIL = "FAIL";
+    private Random random = new Random();
 
-	private final JdbcTemplate jdbcTemplate;
-	private Random random;
+    @Autowired
+    private UserService userService;
 
-	public UserController(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-		this.random = new Random();
-	}
+    @PostMapping(value = "/addAge", produces = "application/json")
+    public Boolean user(Long id) {
+        LOGGER.info("user Service ... xid: " + RootContext.getXID());
 
-	@PostMapping(value = "/user", produces = "application/json")
-	public String user(Long id) {
-		LOGGER.info("user Service ... xid: " + RootContext.getXID());
+        if (random.nextBoolean()) {
+            throw new RuntimeException("this is a mock Exception");
+        }
 
-		if (random.nextBoolean()) {
-			throw new RuntimeException("this is a mock Exception");
-		}
+        return userService.addAge(id);
+    }
 
-		int result = jdbcTemplate.update(
-				"update users set age = age + 1 where id = ?",
-				new Object[] { id });
-		LOGGER.info("user Service End ... ");
-		if (result == 1) {
-			return SUCCESS;
-		}
-		return FAIL;
-	}
+    @PostMapping(value = "/getUserByName", produces = "application/json")
+    public UserModel getUserByName(String name) {
+        LOGGER.info("user Service ... xid: " + RootContext.getXID());
+        return userService.getUserByName(name);
+    }
+
+    @PostMapping(value = "/getUserById/{id}")
+    public UserModel getUserById(@PathVariable("id") Long id) {
+        LOGGER.info("user Service ... xid: " + RootContext.getXID());
+        return userService.getUserById(id);
+    }
+
+    @PostMapping(value = "/addUser", produces = "application/json")
+    public UserModel addUser(UserModel userModel) {
+        LOGGER.info("user Service ... xid: " + RootContext.getXID());
+        return userService.addUser(userModel);
+    }
 
 }

@@ -8,21 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
- * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
+ * 账户服务
+ *
+ * @author qinchy
  */
 @Component
 public class AccountServiceImpl implements AccountService {
 
+    private static final BeanCopier copier = BeanCopier.create(AccountModel.class, AccountDO.class, false);
+
     @Autowired
     private AccountMapper accountMapper;
 
-    private static final BeanCopier copier = BeanCopier.create(AccountModel.class, AccountDO.class, false);
-
     @Override
-    public Integer getMoney(String userId) {
-        AccountDO accountDO = accountMapper.getByUserId(userId);
-        return accountDO != null ? accountDO.getMoney(): null;
+    public BigDecimal getMoney(String userId) {
+        AccountDO accountDO = accountMapper.getAccountByUserId(userId);
+        return accountDO != null ? accountDO.getMoney() : null;
     }
 
     @Override
@@ -30,8 +34,16 @@ public class AccountServiceImpl implements AccountService {
         AccountDO accountDO = new AccountDO();
         copier.copy(user, accountDO, null);
 
-        Long id = accountMapper.insert(accountDO);
+        Integer id = accountMapper.createAccount(accountDO);
         user.setId(id);
         return user;
+    }
+
+    @Override
+    public int reduce(String userId, BigDecimal money) {
+        AccountDO accountDO = new AccountDO();
+        accountDO.setUserId(userId);
+        accountDO.setMoney(money);
+        return accountMapper.reduce(accountDO);
     }
 }

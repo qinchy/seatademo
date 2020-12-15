@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private static final BeanCopier COPIER1 = BeanCopier.create(UserModel.class, UserDO.class, false);
+
     private static final BeanCopier COPIER2 = BeanCopier.create(UserDO.class, UserModel.class, false);
+
     @Autowired
     private UserMapper userMapper;
 
@@ -47,5 +49,14 @@ public class UserServiceImpl implements UserService {
         Long id = userMapper.addUser(userDO);
         user.setId(id);
         return user;
+    }
+
+    @Override
+    public Boolean addAge(Long id) {
+        int count = userMapper.addAge(id);
+        if (count == 1) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 }

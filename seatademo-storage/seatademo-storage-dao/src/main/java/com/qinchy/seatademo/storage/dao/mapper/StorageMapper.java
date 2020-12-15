@@ -9,9 +9,25 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface StorageMapper {
 
-    StorageDO getByCommodityCode(String commodityCode);
+    /**
+     * 通过商品编号获取库存信息
+     * @param commodityCode 商品编号
+     * @return {@link StorageDO}
+     */
+    StorageDO getStorageByCommodityCode(String commodityCode);
 
-    Long addStorage(StorageDO user);
+    /**
+     * 商品上架
+     * @param storageDO 库存实体
+     * @return {@link StorageDO}
+     */
+    Long addStorage(StorageDO storageDO);
 
+    /**
+     * 扣减库存
+     *
+     * @param storageDO TODO
+     * @return {@link int}
+     **/
     int deduct(StorageDO storageDO);
 }

@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "seatademo-storage")
 public interface StorageFeignClient {
 
-    @GetMapping("storage/deduct")
+    @GetMapping("/storage/deduct")
     Boolean deduct(@RequestParam("commodityCode") String commodityCode, @RequestParam("count") Integer count);
 }

@@ -16,43 +16,21 @@
 
 package com.qinchy.seatademo.seata.configuration;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author xiaojing
+ * 配置类
+ *
+ * @author qinchy
  */
 @Configuration
-@EnableFeignClients
 public class BusinessConfiguration {
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-	@FeignClient(value = "seatademo-storage", url = "http://127.0.0.1:18082")
-	public interface StorageService {
-
-		@RequestMapping(path = "/storage/{commodityCode}/{count}")
-		String storage(@RequestParam("commodityCode") String commodityCode,
-                       @RequestParam("count") int count);
-
-	}
-
-	@FeignClient(value = "seatademo-order", url = "http://127.0.0.1:18083")
-	public interface OrderService {
-
-		@PostMapping(path = "/order")
-		String order(@RequestParam("userId") String userId,
-                     @RequestParam("commodityCode") String commodityCode,
-                     @RequestParam("orderCount") int orderCount);
-
-	}
 }

@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface OrderMapper {
 
-    OrderDO getByUserId(String userId);
+    OrderDO getOrderByUserId(String userId);
 
-    Long addOrder(OrderDO order);
+    Integer createOrder(OrderDO order);
 }

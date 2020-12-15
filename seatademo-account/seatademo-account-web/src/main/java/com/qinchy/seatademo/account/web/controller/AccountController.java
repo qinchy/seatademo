@@ -15,69 +15,86 @@
  */
 package com.qinchy.seatademo.account.web.controller;
 
+import com.qinchy.seatademo.account.api.AccountService;
 import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.Random;
 
 /**
- * @author xiaojing
+ * 账户服务controller
+ *
+ * @author qinchy
  */
 @RestController
 @RequestMapping("/account")
 public class AccountController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 
-	private static final String SUCCESS = "SUCCESS";
-	private static final String FAIL = "FAIL";
+    /**
+     * 模拟故障的随机数
+     **/
+    private Random random = new Random();
 
-	private final JdbcTemplate jdbcTemplate;
-	private Random random;
+    /**
+     * 账户服务类
+     **/
+    @Autowired
+    private AccountService accountService;
 
-	public AccountController(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-		this.random = new Random();
-	}
+    /**
+     * 扣减账户
+     *
+     * @param userId 账户编号
+     * @param money  账户金额
+     * @return {@link String}
+     **/
+    @PostMapping(value = "/reduce", produces = "application/json")
+    public Boolean reduce1(String userId, BigDecimal money) {
+        LOGGER.info("Account Service ... xid: " + RootContext.getXID());
 
-	@PostMapping(value = "/account", produces = "application/json")
-	public String account(String userId, int money) {
-		LOGGER.info("Account Service ... xid: " + RootContext.getXID());
+        if (random.nextBoolean()) {
+            throw new RuntimeException("this is a mock Exception");
+        }
 
-		if (random.nextBoolean()) {
-			throw new RuntimeException("this is a mock Exception");
-		}
+        int result = accountService.reduce(userId, money);
+        LOGGER.info("Account Service End ... ");
+        if (result == 1) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 
-		int result = jdbcTemplate.update(
-				"update account_tbl set money = money - ? where user_id = ?",
-				new Object[] { money, userId });
-		LOGGER.info("Account Service End ... ");
-		if (result == 1) {
-			return SUCCESS;
-		}
-		return FAIL;
-	}
+    /**
+     * 扣减账户
+     *
+     * @param userId 账户编号
+     * @param money  扣减金额
+     * @return {@link Boolean}
+     **/
+    @GetMapping(value = "/reduce")
+    public Boolean reduce2(@RequestParam("userId") String userId, @RequestParam("money") BigDecimal money) {
+        LOGGER.info("Account Service ... xid: " + RootContext.getXID());
 
-	@GetMapping(value = "/reduce")
-	public String reduce(@RequestParam("userId") String userId, @RequestParam("money") BigDecimal money) {
-		LOGGER.info("Account Service ... xid: " + RootContext.getXID());
+        if (random.nextBoolean()) {
+            throw new RuntimeException("this is a mock Exception");
+        }
 
-		if (random.nextBoolean()) {
-			throw new RuntimeException("this is a mock Exception");
-		}
-
-		int result = jdbcTemplate.update(
-				"update account_tbl set money = money - ? where user_id = ?",
-				new Object[] { money, userId });
-		LOGGER.info("Account Service End ... ");
-		if (result == 1) {
-			return SUCCESS;
-		}
-		return FAIL;
-	}
+        int result = accountService.reduce(userId, money);
+        LOGGER.info("Account Service End ... ");
+        if (result == 1) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 
 }

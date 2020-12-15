@@ -22,4 +22,8 @@
             SELECT LAST_INSERT_ID() AS ID
         </selectKey>
     </insert>
+
+    <update id="addAge" parameterType="Integer">
+        update users set age = age + 1 where id = #{id}
+    </update>
 </mapper>

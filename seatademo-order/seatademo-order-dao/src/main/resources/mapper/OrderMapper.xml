@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qinchy.seatademo.order.dao.mapper.OrderMapper">
 
-    <select id="getByUserId" parameterType="String" resultType="com.qinchy.seatademo.order.dao.dataobject.OrderDO">
+    <select id="getOrderByUserId" parameterType="String" resultType="com.qinchy.seatademo.order.dao.dataobject.OrderDO">
         SELECT *
         FROM order_tbl
         WHERE user_id = #{value}
     </select>
 
-    <insert id="addOrder" parameterType="com.qinchy.seatademo.order.dao.dataobject.OrderDO">
+    <insert id="createOrder" parameterType="com.qinchy.seatademo.order.dao.dataobject.OrderDO">
         INSERT INTO order_tbl(user_id, commodity_code, `count`, money) VALUES (#{userId}, #{commodityCode}, #{count}, #{money})
         <selectKey resultType="java.lang.Long" keyProperty="id">
             SELECT LAST_INSERT_ID() AS ID

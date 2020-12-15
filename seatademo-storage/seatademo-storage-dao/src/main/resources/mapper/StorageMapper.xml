@@ -10,7 +10,7 @@
         <result column="count" jdbcType="INTEGER" property="count" />
     </resultMap>
     
-    <select id="getByCommodityCode" parameterType="string" resultMap="BaseResultMap">
+    <select id="getStorageByCommodityCode" parameterType="string" resultMap="BaseResultMap">
         SELECT *
         FROM storage_tbl
         WHERE commodity_code = #{value}

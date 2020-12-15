@@ -16,13 +16,13 @@
 
 package com.qinchy.seatademo.seata.controller;
 
-import com.qinchy.seatademo.seata.configuration.BusinessConfiguration.OrderService;
-import com.qinchy.seatademo.seata.configuration.BusinessConfiguration.StorageService;
-
+import com.qinchy.seatademo.seata.configuration.OrderFeignClient;
+import com.qinchy.seatademo.seata.configuration.StorageFeignClient;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,30 +47,28 @@ public class HomeController {
 	private static final String COMMODITY_CODE = "C00321";
 	private static final int ORDER_COUNT = 2;
 
-	private final RestTemplate restTemplate;
-	private final OrderService orderService;
-	private final StorageService storageService;
+	@Autowired
+	private RestTemplate restTemplate;
 
-	public HomeController(RestTemplate restTemplate, OrderService orderService,
-                          StorageService storageService) {
-		this.restTemplate = restTemplate;
-		this.orderService = orderService;
-		this.storageService = storageService;
-	}
+	@Autowired
+	private OrderFeignClient orderFeignClient;
 
-	@GlobalTransactional(timeoutMills = 300000, name = "default-seata-service-group")
+	@Autowired
+	private StorageFeignClient storageFeignClient;
+
+	@GlobalTransactional(timeoutMills = 300000, name = "seatademo-start-service-group")
 	@GetMapping(value = "/seata/rest", produces = "application/json")
 	public String rest() {
 
-		String result = restTemplate.getForObject(
-				"http://127.0.0.1:18082/storage/" + COMMODITY_CODE + "/" + ORDER_COUNT,
-				String.class);
+		Boolean result = restTemplate.getForObject(
+				"http://127.0.0.1:18082/storage/deduct/" + COMMODITY_CODE + "/" + ORDER_COUNT,
+				Boolean.class);
 
-		if (!SUCCESS.equals(result)) {
+		if (!result) {
 			throw new RuntimeException();
 		}
 
-		String url = "http://127.0.0.1:18083/order";
+		String url = "http://127.0.0.1:18083/order/create";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -82,29 +80,29 @@ public class HomeController {
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
 				map, headers);
 
-		ResponseEntity<String> response = restTemplate.postForEntity(url, request,
-				String.class);
+		ResponseEntity<Boolean> response = restTemplate.postForEntity(url, request,
+				Boolean.class);
 
 		result = response.getBody();
 
-		if (!SUCCESS.equals(result)) {
+		if (!result) {
 			throw new RuntimeException();
 		}
 
 		return SUCCESS;
 	}
 
-	@GlobalTransactional(timeoutMills = 300000, name = "default-seata-service-group")
+	@GlobalTransactional(timeoutMills = 300000, name = "seatademo-start-service-group")
 	@GetMapping(value = "/seata/feign", produces = "application/json")
 	public String feign() {
 
-		String result = storageService.storage(COMMODITY_CODE, ORDER_COUNT);
+		Boolean result = storageFeignClient.deduct(COMMODITY_CODE, ORDER_COUNT);
 
-		if (!SUCCESS.equals(result)) {
+		if (result) {
 			throw new RuntimeException();
 		}
 
-		result = orderService.order(USER_ID, COMMODITY_CODE, ORDER_COUNT);
+		result = orderFeignClient.create(USER_ID, COMMODITY_CODE, ORDER_COUNT);
 
 		if (!SUCCESS.equals(result)) {
 			throw new RuntimeException();

@@ -11,9 +11,35 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AccountMapper {
 
-    AccountDO getByUserId(String userId);
+    /**
+     * 通过账户编号获取账户信息
+     *
+     * @param userId 用户编号
+     * @return {@link AccountDO}
+     **/
+    AccountDO getAccountByUserId(String userId);
 
-    AccountDO getById(Long id);
+    /**
+     * 通过唯一编号获取账户信息
+     *
+     * @param id 数据库唯一id
+     * @return {@link AccountDO}
+     **/
+    AccountDO getAccountById(Long id);
 
-    Long insert(AccountDO account);
+    /**
+     * 新增账户信息
+     *
+     * @param account 账户信息
+     * @return {@link Long}
+     **/
+    Integer createAccount(AccountDO account);
+
+    /**
+     * 扣减账户
+     *
+     * @param accountDO 账户信息
+     * @return {@link Long}
+     **/
+    int reduce(AccountDO accountDO);
 }
