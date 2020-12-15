@@ -38,7 +38,7 @@ logging:
     org.mybatis: debug
     java.sql: debug
     org.springframework.web: trace
-    io.seata: debug
+    io.seata: info
 
 arthas:
   agent-id: seatademo-storage

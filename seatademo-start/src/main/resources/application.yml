@@ -1,18 +1,9 @@
 server:
-  port: 8080
+  port: 18080
 
 spring:
   application:
     name: seatademo-start
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-      config:
-        server-addr: localhost:8848
-    alibaba:
-      seata:
-        tx-service-group: seatademo-start-service-group
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -28,6 +19,23 @@ spring:
       max-lifetime: 180000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: seatademo-start-service-group
+
+logging:
+  level:
+    root: info
+    org.mybatis: debug
+    java.sql: debug
+    org.springframework.web: trace
+    io.seata: info
 
 arthas:
   agent-id: seatademo-start

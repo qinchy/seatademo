@@ -13,8 +13,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  **/
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
 @RefreshScope
+@EnableFeignClients
 public class SeatademoApplication {
 
     public static void main(String[] args) {
