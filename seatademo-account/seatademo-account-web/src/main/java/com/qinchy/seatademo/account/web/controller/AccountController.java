@@ -20,6 +20,7 @@ import io.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,9 @@ import java.util.Random;
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
+
+    @Value("${logging.level.io.seata}")
+    private String seataLogLevel;
 
     /**
      * 模拟故障的随机数
@@ -95,6 +99,11 @@ public class AccountController {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
+    }
+
+    @GetMapping("/seataLogLevel")
+    public String seataLogLevel(){
+        return seataLogLevel;
     }
 
 }

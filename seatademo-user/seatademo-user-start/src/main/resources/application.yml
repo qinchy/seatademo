@@ -28,6 +28,8 @@ spring:
     alibaba:
       seata:
         tx-service-group: seatademo-user-service-group
+    refresh:
+      extra-refreshable: ["HikariDataSource"]
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml

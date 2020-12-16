@@ -28,6 +28,8 @@ spring:
     alibaba:
       seata:
         tx-service-group: seatademo-start-service-group
+    refresh:
+      extra-refreshable: ["HikariDataSource"]
 
 logging:
   level:

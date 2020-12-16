@@ -22,6 +22,7 @@ import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,6 +48,9 @@ public class HomeController {
     private static final String USER_ID = "U100001";
     private static final String COMMODITY_CODE = "C00321";
     private static final int ORDER_COUNT = 2;
+
+    @Value("${logging.level.io.seata}")
+    private String seataLogLevel;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -116,4 +120,8 @@ public class HomeController {
         return SUCCESS;
     }
 
+    @GetMapping("/seataLogLevel")
+    public String seataLogLevel(){
+        return seataLogLevel;
+    }
 }

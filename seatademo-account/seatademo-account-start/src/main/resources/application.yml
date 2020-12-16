@@ -28,6 +28,8 @@ spring:
     alibaba:
       seata:
         tx-service-group: seatademo-account-service-group
+    refresh:
+      extra-refreshable: ["HikariDataSource"]
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
@@ -49,7 +51,6 @@ arthas:
   slient-init: false
   session-timeout: 10
   stat-url:
-
 seata:
   enabled: true
   registry:
