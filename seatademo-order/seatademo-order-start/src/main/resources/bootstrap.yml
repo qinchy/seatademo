@@ -1,7 +1,12 @@
 spring:
+  profiles:
+    active: deve
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
       config:
         name: seatademo-order
         file-extension: yaml
+        namespace: ${spring.profiles.active}
+      discovery:
+        namespace: ${spring.profiles.active}
