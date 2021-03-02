@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Administrator
  * @date 2020/12/15 11:41
  */
-@FeignClient(value = "seatademo-order", url = "http://127.0.0.1:18083")
+//@FeignClient(value = "seatademo-order", url = "http://127.0.0.1:18083")
+@FeignClient(value = "seatademo-order")
 public interface OrderFeignClient {
     @PostMapping(path = "/order/create")
     Boolean create(@RequestParam("userId") String userId,

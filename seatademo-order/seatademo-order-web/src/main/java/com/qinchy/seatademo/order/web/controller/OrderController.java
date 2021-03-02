@@ -18,6 +18,7 @@ package com.qinchy.seatademo.order.web.controller;
 
 import com.qinchy.seatademo.order.api.OrderService;
 import com.qinchy.seatademo.order.api.model.OrderModel;
+import com.qinchy.seatademo.order.service.feign.AccountFeignClient;
 import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.StringUtils;
@@ -58,6 +59,9 @@ public class OrderController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private AccountFeignClient accountFeignClient;
 
     /**
      * 创建订单
@@ -113,7 +117,7 @@ public class OrderController {
         LOGGER.info("Order Service Begin ... xid: " + RootContext.getXID());
 
         BigDecimal orderMoney = calculate(orderModel.getCommodityCode(), orderModel.getCount());
-        reduceAccount(orderMoney);
+        reduceAccount(orderMoney, "feign");
 
         orderModel.setMoney(orderMoney);
         OrderModel order2 = orderService.createOrder(orderModel);
@@ -168,6 +172,20 @@ public class OrderController {
         }
 
         return Boolean.FALSE;
+    }
+
+    /**
+     * HTTP方式调用账户服务
+     *
+     * @param orderMoney 订单金额
+     * @return {@link Boolean}
+     **/
+    private Boolean reduceAccount(BigDecimal orderMoney,String type) {
+        if (!StringUtils.endsWithIgnoreCase(type,"feign")){
+            return reduceAccount(orderMoney);
+        }
+
+        return accountFeignClient.reduce(USER_ID, orderMoney);
     }
 
     /**

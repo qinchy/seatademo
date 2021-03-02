@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author qinchy
  * @date 2020/12/15 11:40
  */
-@FeignClient(value = "seatademo-storage", url = "http://127.0.0.1:18082")
+//@FeignClient(value = "seatademo-storage", url = "http://127.0.0.1:18082")
+@FeignClient(value = "seatademo-storage")
 public interface StorageFeignClient {
 
     /**
