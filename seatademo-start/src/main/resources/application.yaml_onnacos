@@ -30,6 +30,8 @@ spring:
         tx-service-group: seatademo-start-service-group
     refresh:
       extra-refreshable: ["HikariDataSource"]
+    discovery:
+      ip: 192.168.81.148
 
 logging:
   level:
