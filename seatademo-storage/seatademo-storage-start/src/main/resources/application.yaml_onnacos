@@ -23,6 +23,7 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+        ip: 192.168.81.148
       config:
         server-addr: localhost:8848
     alibaba:
@@ -30,8 +31,6 @@ spring:
         tx-service-group: seatademo-storage-service-group
     refresh:
       extra-refreshable: ["HikariDataSource"]
-    discovery:
-      ip: 192.168.81.148
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
